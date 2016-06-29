@@ -24,7 +24,7 @@ estimates.
 # devtools::install_github("rmcelreath/rethinking")
 library("dplyr", warn.conflicts = FALSE)
 library("rstanarm")
-library("purrr")
+library("purrr", warn.conflicts = FALSE)
 library("tidyr")
 library("ggplot2")
 
@@ -37,12 +37,11 @@ str(rethinking_info, give.attr = FALSE)
 ```
 
 
-## Prepare the data
+## Prepare the primate milk data
 
-Get the primate milk data. The example models will predict the kilocalories
-per gram of milk using the mass of the mother (log kg) and the proportion of
-the brain that is neocortex. These data are from Hinde and Milligan (2011),
-according to `?milk`.
+The example models will predict the kilocalories per gram of milk using the mass
+of the mother (log kg) and the proportion of the brain that is neocortex. These
+data are from Hinde and Milligan (2011), according to `?milk`.
 
 ```{r}
 data(milk, package = "rethinking")
@@ -59,7 +58,7 @@ d %>% knitr::kable(digits = 3)
 
 Fit four different models that we will compare later.
 
-```{r, message}
+```{r, results='hide'}
 # Intercept only
 m1 <- stan_glm(
   formula = kcal.per.g ~ 1,
@@ -76,11 +75,19 @@ m3 <- update(m1, . ~ log_mass)
 
 # Two predictors
 m4 <- update(m1, . ~ neocortex + log_mass)
+
+```
+
+```{r}
+summary(m1)
+summary(m2)
+summary(m3)
+summary(m4)
 ```
 
 Compare posterior to prior in each model.
  
-```{r posterior-vs-prior}
+```{r posterior-vs-prior, results = "hide"}
 # We want to have the same color-parameter mapping across plots, otherwise the
 # sigma term will have three different colors. Manually set colors, using the D3
 # color palette
@@ -90,9 +97,17 @@ p1 <- posterior_vs_prior(m1) + scale_color_manual(values = d3_colors[c(1, 4)])
 p2 <- posterior_vs_prior(m2) + scale_color_manual(values = d3_colors[c(1, 3:4)])
 p3 <- posterior_vs_prior(m3) + scale_color_manual(values = d3_colors[c(1:2, 4)])
 p4 <- posterior_vs_prior(m4) + scale_color_manual(values = d3_colors[c(1:4)])
+```
+
+```{r}
 cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
+Model comparison with WAIC says the fourth one is to be preferred. Why?
+
+```{r}
+loo::compare(loo::waic(m1), loo::waic(m2), loo::waic(m3), loo::waic(m4))
+```
 
 
 
