@@ -219,7 +219,7 @@ log-likelihoods.
 
 The WAIC (Widely Applicable Information Criterion) is calculated using pointwise
 log-likelihoods. Specifically, we calculate the log-pointwise-predictive density
-(lppd). We observation has its own likelihood in each model, so we calculate
+(lppd). Each observation has its own likelihood in each model, so we calculate
 each observation's average likelihood across models and take the log.
 
 RStanARM provides a `log_lik` to get an n_samples x n_observations matrix of
