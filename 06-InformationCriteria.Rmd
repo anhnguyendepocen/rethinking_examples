@@ -1,0 +1,148 @@
+---
+title: "06 - Information Criteria"
+author: "Tristan Mahr"
+date: "June 29, 2016"
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE)
+```
+
+
+```{r packages}
+# devtools::install_github("rmcelreath/rethinking")
+library("dplyr", warn.conflicts = FALSE)
+library("rstanarm")
+library("ggplot2")
+# options(mc.cores = parallel::detectCores())
+
+# I don't load the rethinking package, but I use the data from it.
+rethinking_info <- packageDescription(
+  pkg = "rethinking", 
+  fields = c("Version", "GithubUsername", "GithubRepo", 
+             "GithubRef", "GithubSHA1"))
+str(rethinking_info, give.attr = FALSE)
+```
+
+
+## 6.5 Using Information Criteria
+
+Get the primate milk data. The example models will predict the kilocalories per
+gram of milk using the mass of the mother (log kg) and the proportion of the
+brain that is neocortex. 
+
+```{r}
+data(milk, package = "rethinking")
+d <- milk %>% 
+  as_data_frame %>% 
+  filter(!is.na(neocortex.perc)) %>% 
+  mutate(neocortex = neocortex.perc / 100,
+         log_mass = log(mass)) %>% 
+  select(clade, species, kcal.per.g, mass, log_mass, neocortex)
+d %>% knitr::kable(digits = 3)
+```
+
+I fit the models using RStanArm, and not the functions provided by the
+rethinking package, so I am not using the same priors as the book.
+
+Fit the models.
+
+```{r}
+# Intercept only
+m1 <- stan_glm(
+  formula = kcal.per.g ~ 1,
+  data = d,
+  family = gaussian(),
+  prior = normal(0, 1),
+  prior_intercept = normal(.5, .5),
+  prior_ops = prior_options(prior_scale_for_dispersion = .25)
+)
+
+# One predictor
+m2 <- update(m1, . ~ neocortex)
+m3 <- update(m1, . ~ log_mass)
+
+# Two predictors
+m4 <- update(m1, . ~ neocortex + log_mass)
+```
+
+Compare posterior to prior in each model.
+ 
+```{r posterior-vs-prior}
+# Want to have same colors for parameters across plots, so manually set colors
+# so that intercept gets first color, sigma fourth color, etc.
+d3_colors <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", 
+               "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf")
+p1 <- posterior_vs_prior(m1) + scale_color_manual(values = d3_colors[c(1, 4)])
+p2 <- posterior_vs_prior(m2) + scale_color_manual(values = d3_colors[c(1, 3:4)])
+p3 <- posterior_vs_prior(m3) + scale_color_manual(values = d3_colors[c(1:2, 4)])
+p4 <- posterior_vs_prior(m4) + scale_color_manual(values = d3_colors[c(1:4)])
+cowplot::plot_grid(p1, p2, p3, p4)
+```
+
+Get the WAIC using the loo package.
+
+I'm going to experiment with many-models, dataframe-of-models technique here.
+That means doing some unconventional things with dataframes. 
+
+Basically, I make a data-frame with one row per model and then do things to each
+model, storing the results of those operations as new columns in the dataframe.
+Specifically, I calculate the WAIC of the Stan models and refit the models
+using the classical technique so I can get an AIC value to compare to the WAIC
+value.
+
+```{r}
+library("tidyr")
+library("purrr")
+
+# Refit a stanreg model using lm
+as_lm <- function(stan_model) {
+  lm(stan_model$formula, stan_model$data )
+}
+
+# Get a dataframe summary from a loo::waic object
+tidy_waic <- function(waic_fit) {
+  to_keep <- c("waic", "se_waic", "elpd_waic", "se_elpd_waic", 
+               "p_waic", "se_p_waic")
+  ret <- waic_fit[to_keep]
+  as_data_frame(ret)
+}
+
+# Create a dataframe with one-row per model
+model_summary <- data_frame(StanFit = list(m1, m2, m3, m4)) %>% 
+  mutate(
+    # Use the formula from the model as a label
+    Formula = map_chr(StanFit, ~ .x$formula %>% deparse),
+    # Get the classical fit and deviance/AIC of classical fit
+    ClassicalFit = map(StanFit, as_lm),
+    Deviance = map_dbl(ClassicalFit, ~ logLik(.x) * -2),
+    AIC = map_dbl(ClassicalFit, AIC),
+    # Get the WAIC summary from the Stan fit of the model
+    WAIC = map(StanFit, . %>% loo::waic() %>% tidy_waic)) %>% 
+  # The WAIC is stored as a dataframe within each row. Unnest to promote the
+  # columns from the nested dataframe
+  unnest(WAIC)
+
+# We need to exclude the list columns in order to print a formatted table 
+model_summary %>% 
+  select(-StanFit, -ClassicalFit) %>% 
+  arrange(waic) %>% 
+  knitr::kable(, digits = 2) 
+```
+
+
+
+```{r}
+
+```
+
+
+```{r}
+
+
+
+```
+
+
+
