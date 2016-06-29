@@ -87,7 +87,7 @@ summary(m4)
 
 Compare posterior to prior in each model.
  
-```{r posterior-vs-prior, results = "hide"}
+```{r, results = "hide"}
 # We want to have the same color-parameter mapping across plots, otherwise the
 # sigma term will have three different colors. Manually set colors, using the D3
 # color palette
@@ -99,7 +99,7 @@ p3 <- posterior_vs_prior(m3) + scale_color_manual(values = d3_colors[c(1:2, 4)])
 p4 <- posterior_vs_prior(m4) + scale_color_manual(values = d3_colors[c(1:4)])
 ```
 
-```{r}
+```{r posterior-vs-prior}
 cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
