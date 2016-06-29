@@ -9,15 +9,25 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE)
 ```
 
+## Preamble 
+
+This is notebook of code I wrote while reading Chapter 6 of [_Statistical
+Rethinking_](http://xcelab.net/rm/statistical-rethinking/). I don't use the
+author's [rethinking package](https://github.com/rmcelreath/rethinking) or
+any of its helper functions. I instead used rstanarm to fit the Bayesian
+models and loo for model comparisons, because I'm trying to stay in that
+ecosystem. As a result, my models have different priors and different parameter 
+estimates.
 
 ```{r packages}
 # devtools::install_github("rmcelreath/rethinking")
 library("dplyr", warn.conflicts = FALSE)
 library("rstanarm")
+library("purrr")
+library("tidyr")
 library("ggplot2")
-# options(mc.cores = parallel::detectCores())
 
-# I don't load the rethinking package, but I use the data from it.
+# I don't load the rethinking package, but I use data from it. Log version.
 rethinking_info <- packageDescription(
   pkg = "rethinking", 
   fields = c("Version", "GithubUsername", "GithubRepo", 
@@ -26,7 +36,7 @@ str(rethinking_info, give.attr = FALSE)
 ```
 
 
-## 6.5 Using Information Criteria
+## Fit the models
 
 Get the primate milk data. The example models will predict the kilocalories
 per gram of milk using the mass of the mother (log kg) and the proportion of
@@ -44,12 +54,10 @@ d <- milk %>%
 d %>% knitr::kable(digits = 3)
 ```
 
-I fit the models using RStanArm, and not the functions provided by the
-rethinking package, so I am not using the same priors as the book.
 
-Fit the models.
+Fit four different models that we will compare later.
 
-```{r}
+```{r, message}
 # Intercept only
 m1 <- stan_glm(
   formula = kcal.per.g ~ 1,
@@ -71,8 +79,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 Compare posterior to prior in each model.
  
 ```{r posterior-vs-prior}
-# Want to have same colors for parameters across plots, so manually set colors
-# so that intercept gets first color, sigma fourth color, etc.
+# We want to have the same color-parameter mapping across plots, otherwise the
+# sigma term will have three different colors. Manually set colors, using the D3
+# color palette
 d3_colors <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", 
                "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf")
 p1 <- posterior_vs_prior(m1) + scale_color_manual(values = d3_colors[c(1, 4)])
@@ -83,16 +92,20 @@ cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
 
+
+
 ## Manual AIC calculation
 
-To know what these information criteria are measuring, I calculate them by hand. 
+To figure out what these information criteria are measuring, I want to calculate
+them by hand.
 
 The AIC works on the classical models, so I write a helper function to convert
 an RStanArm glm model into a classical glm model.
 
 ```{r}
-# Refit a stanreg model using glm. Assumes no other glm arguments are used
-# besides formula, data and family.
+# Refit a stanreg model using glm. Assumes no other glm arguments are used 
+# besides formula, data and family--i.e., this is doesn't work for all glm
+# models.
 as_glm <- function(stan_model) {
   glm(stan_model$formula, data = stan_model$data, family = stan_model$family)
 }
@@ -100,7 +113,7 @@ as_glm <- function(stan_model) {
 glm_m4 <- as_glm(m4)
 ```
 
-Plus another helper to get the maximum likelihood estimate of the model's sigma
+Plus, another helper to get the maximum likelihood estimate of the model's sigma
 term.
 
 ```{r}
@@ -114,12 +127,14 @@ sigma_ml <- function(m) {
 ```
 
 According to our model, each observation falls on a normal curve with a mean
-equal to fitted value, and a sigma equal to model sigma. The density of the
-fitted-value curve at the observed value is the likelihood of the data.
+equal to fitted value, and a standard deviation equal to model sigma. The
+density of the fitted-value curve at the observed value is the likelihood of the
+data.
 
 To compute the likelihood of each observation, we find the density of
-observations on their fitted-value curves. These are three such densities. (Code 
-omitted because it's hairy code using base graphics.)
+observations on their fitted-value curves. These are three such densities. (Code
+omitted because it's hairy base-graphics code built from the example code
+in `?dnorm`.)
 
 ```{r likelihood curves, echo = FALSE}
 # Here are three likelihoods from the model.
@@ -140,7 +155,7 @@ model.
 ```{r}
 # By hand calculation
 log_likelihoods <- dnorm(
-  x = d$kcal.per.g, 
+  x = glm_m4$y, 
   mean = glm_m4$fitted.values, 
   sd = sigma_ml(glm_m4), 
   log = TRUE)
@@ -155,9 +170,10 @@ logLik(glm_m4)
 dnorm(resid(glm_m4), mean = 0, sd = sigma_ml(glm_m4), log = TRUE) %>% sum
 ```
 
-From the log-likelihood, we can get deviance, AIC, and BIC.
+From the log-likelihood, we can compute deviance, AIC, and BIC.
 
 ```{r}
+# as.numeric to get rid of df attribute
 deviance_m4 <- as.numeric(-2 * logLik(glm_m4))
 npars_m4 <- attr(logLik(glm_m4), "df")
 
@@ -185,6 +201,81 @@ BIC(glm_m4)
 
 
 
+## Manual WAIC calculation
+
+The above AIC example measured one log-likelihood based on one set of
+parameters. Our Bayesian models reflect a distribution of parameter estimates,
+and we sampled thousands of parameter estimates from the posterior distribution.
+As a result, we have a distribution of log-likelihoods, and the posterior
+information criteria will incorporate information from the distribution of 
+log-likelihoods.
+
+The WAIC (Widely Applicable Information Criterion) is calculated using pointwise
+log-likelihoods. Specifically, we calculate the log-pointwise-predictive density
+(lppd). We observation has its own likelihood in each model, so we calculate
+each observation's average likelihood across models and take the log.
+
+RStanARM provides a `log_lik` to get an n_samples x n_observations matrix of
+log-likelihoods.
+
+```{r}
+dim(log_lik(m4))
+
+# log-pointwise-predictive density as the log of the average
+# likelihood of each oberservation
+each_lppd <- log_lik(m4) %>% exp %>% colMeans %>% log 
+each_lppd
+```
+
+We also need a penalty term. Here, it's the effective number of parameters
+(p_waic). Each observation contributes to the penalty term, using the variance
+of its log-likelihoods.
+
+```{r}
+# effective number of parameters by taking variance of log-likelihood of each
+# observation 
+each_p_waic <- log_lik(m4) %>% apply(2, var)
+each_p_waic
+```
+
+The WAIC is the difference in total lppd and total p_waic on the deviance scale.
+
+```{r}
+lppd <- sum(each_lppd)
+lppd
+p_waic <- sum(each_p_waic)
+p_waic
+waic <- -2 * (lppd - p_waic)
+waic
+
+# skip the summing step
+each_waic <- -2 * (each_lppd - each_p_waic)
+sum(each_waic)
+```
+
+But because each point contributes information to the lppd and p_waic
+calculations, we can compute a standard error on these numbers.
+
+```{r}
+# standard error of the waics
+se <- function(xs) sqrt(length(xs) * var(xs))
+se(each_p_waic)
+se(each_waic)
+```
+
+These calculations match the estimates from the loo package. The loo::waic
+estimates use expected lppd (elpd) which already subtracts p_waic from lppd.
+It's _expected_ because it is the log-likelihood of the in-sample data adjusted
+with a penalty term. The resulting value is an expectation for out-of-sample
+data.
+
+```{r}
+# manual elpd_waic
+lppd - p_waic
+se(each_lppd - each_p_waic)
+
+loo::waic(m4)
+```
 
 
 
@@ -195,26 +286,24 @@ BIC(glm_m4)
 
 
 
-***
 
+
+## Getting WAIC for the models
 
 
 Get the WAIC using the loo package.
 
-I'm going to experiment with many-models, dataframe-of-models technique here.
-That means doing some unconventional things with dataframes. 
+I'm going to experiment with the fitting-many-models, data-frame-of-models
+technique here. That means doing some unconventional things with data-frames.
 
 Basically, I make a data-frame with one row per model and then do things to each
-model, storing the results of those operations as new columns in the dataframe.
+model, storing the results of those operations as new columns in the data-frame.
 Specifically, I calculate the WAIC of the Stan models and refit the models
 using the classical technique so I can get an AIC value to compare to the WAIC
 value.
 
 ```{r}
-library("tidyr")
-library("purrr")
-
-# Get a dataframe summary from a loo::waic object
+# Get a data-frame summary from a loo::waic object
 tidy_waic <- function(waic_fit) {
   to_keep <- c("waic", "se_waic", "elpd_waic", "se_elpd_waic", 
                "p_waic", "se_p_waic")
@@ -222,7 +311,7 @@ tidy_waic <- function(waic_fit) {
   as_data_frame(ret)
 }
 
-# Create a dataframe with one-row per model
+# Create a data-frame with one-row per model
 model_summary <- data_frame(StanFit = list(m1, m2, m3, m4)) %>% 
   mutate(
     # Use the formula from the model as a label
@@ -233,8 +322,8 @@ model_summary <- data_frame(StanFit = list(m1, m2, m3, m4)) %>%
     AIC = map_dbl(ClassicalFit, AIC),
     # Get the WAIC summary from the Stan fit of the model
     WAIC = map(StanFit, . %>% loo::waic() %>% tidy_waic)) %>% 
-  # The WAIC is stored as a dataframe within each row. Unnest to promote the
-  # columns from the nested dataframe
+  # The WAIC is stored as a data-frame within each row. Unnest to promote the 
+  # columns from the nested data-frame
   unnest(WAIC)
 
 # We need to exclude the list columns in order to print a formatted table 
