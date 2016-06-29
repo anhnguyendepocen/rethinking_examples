@@ -1,6 +1,6 @@
 ---
 title: "06 - Information Criteria"
-author: "Tristan Mahr"
+author: "TJ Mahr"
 date: "June 29, 2016"
 output: github_document
 ---
@@ -28,9 +28,10 @@ str(rethinking_info, give.attr = FALSE)
 
 ## 6.5 Using Information Criteria
 
-Get the primate milk data. The example models will predict the kilocalories per
-gram of milk using the mass of the mother (log kg) and the proportion of the
-brain that is neocortex. 
+Get the primate milk data. The example models will predict the kilocalories
+per gram of milk using the mass of the mother (log kg) and the proportion of
+the brain that is neocortex. These data are from Hinde and Milligan (2011),
+according to `?milk`.
 
 ```{r}
 data(milk, package = "rethinking")
@@ -81,6 +82,123 @@ p4 <- posterior_vs_prior(m4) + scale_color_manual(values = d3_colors[c(1:4)])
 cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
+
+## Manual AIC calculation
+
+To know what these information criteria are measuring, I calculate them by hand. 
+
+The AIC works on the classical models, so I write a helper function to convert
+an RStanArm glm model into a classical glm model.
+
+```{r}
+# Refit a stanreg model using glm. Assumes no other glm arguments are used
+# besides formula, data and family.
+as_glm <- function(stan_model) {
+  glm(stan_model$formula, data = stan_model$data, family = stan_model$family)
+}
+
+glm_m4 <- as_glm(m4)
+```
+
+Plus another helper to get the maximum likelihood estimate of the model's sigma
+term.
+
+```{r}
+# Get the maximum likelihood estimate of sigma from a model
+# http://stats.stackexchange.com/a/73245
+# https://stat.ethz.ch/pipermail/r-help/2003-June/035518.html
+sigma_ml <- function(m) {
+  squared_errors <- residuals(m) ^ 2
+  sqrt(mean(squared_errors))
+}
+```
+
+According to our model, each observation falls on a normal curve with a mean
+equal to fitted value, and a sigma equal to model sigma. The density of the
+fitted-value curve at the observed value is the likelihood of the data.
+
+To compute the likelihood of each observation, we find the density of
+observations on their fitted-value curves. These are three such densities. (Code 
+omitted because it's hairy code using base graphics.)
+
+```{r likelihood curves, echo = FALSE}
+# Here are three likelihoods from the model.
+plot(function(x) dnorm(x, glm_m4$fitted.values[1], sigma_ml(glm_m4)), 
+     xlab = "Observations", ylab = "Likelihood", col = "grey75")
+
+xs <- seq(.01, .99, .01)
+for (i in c(1, 4, 6)) {
+  density <- dnorm(d$kcal.per.g[i], glm_m4$fitted.values[i], sigma_ml(glm_m4))
+  lines(xs, dnorm(xs, glm_m4$fitted.values[i], sigma_ml(glm_m4)), col = "grey75")
+  points(d$kcal.per.g[i], density)  
+}
+```
+
+The sum of the log of the likelihoods is therefore the log-likelihood of a
+model.
+
+```{r}
+# By hand calculation
+log_likelihoods <- dnorm(
+  x = d$kcal.per.g, 
+  mean = glm_m4$fitted.values, 
+  sd = sigma_ml(glm_m4), 
+  log = TRUE)
+log_likelihoods
+
+sum(log_likelihoods)
+
+# Automatic calculation
+logLik(glm_m4)
+
+# Because residuals have mean 0, we can just use those instead of fitted values
+dnorm(resid(glm_m4), mean = 0, sd = sigma_ml(glm_m4), log = TRUE) %>% sum
+```
+
+From the log-likelihood, we can get deviance, AIC, and BIC.
+
+```{r}
+deviance_m4 <- as.numeric(-2 * logLik(glm_m4))
+npars_m4 <- attr(logLik(glm_m4), "df")
+
+deviance_m4
+```
+
+The information criteria are the deviance measures plus some penalty _k_ times
+the number of parameters. For AIC, the penalty is _k_=2. For BIC, the penalty is
+the log of the number of observations, _k_=log(_n_).
+
+```{r}
+# Manual AIC vs automatic
+aic_m4 <- deviance_m4 + 2 * npars_m4
+aic_m4
+
+AIC(glm_m4)  
+
+# Manual BIC vs automatic  
+bic_m4 <- deviance_m4 + log(nobs(glm_m4)) * npars_m4
+bic_m4
+
+BIC(glm_m4)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***
+
+
+
 Get the WAIC using the loo package.
 
 I'm going to experiment with many-models, dataframe-of-models technique here.
@@ -96,11 +214,6 @@ value.
 library("tidyr")
 library("purrr")
 
-# Refit a stanreg model using lm
-as_lm <- function(stan_model) {
-  lm(stan_model$formula, stan_model$data )
-}
-
 # Get a dataframe summary from a loo::waic object
 tidy_waic <- function(waic_fit) {
   to_keep <- c("waic", "se_waic", "elpd_waic", "se_elpd_waic", 
@@ -115,7 +228,7 @@ model_summary <- data_frame(StanFit = list(m1, m2, m3, m4)) %>%
     # Use the formula from the model as a label
     Formula = map_chr(StanFit, ~ .x$formula %>% deparse),
     # Get the classical fit and deviance/AIC of classical fit
-    ClassicalFit = map(StanFit, as_lm),
+    ClassicalFit = map(StanFit, as_glm),
     Deviance = map_dbl(ClassicalFit, ~ logLik(.x) * -2),
     AIC = map_dbl(ClassicalFit, AIC),
     # Get the WAIC summary from the Stan fit of the model
@@ -130,19 +243,3 @@ model_summary %>%
   arrange(waic) %>% 
   knitr::kable(, digits = 2) 
 ```
-
-
-
-```{r}
-
-```
-
-
-```{r}
-
-
-
-```
-
-
-
