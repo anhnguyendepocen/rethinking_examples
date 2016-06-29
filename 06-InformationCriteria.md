@@ -109,9 +109,9 @@ m1 <- stan_glm(
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.021 seconds (Warm-up)
-#>                0.023 seconds (Sampling)
-#>                0.044 seconds (Total)
+#>  Elapsed Time: 0.019 seconds (Warm-up)
+#>                0.026 seconds (Sampling)
+#>                0.045 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -128,9 +128,9 @@ m1 <- stan_glm(
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.019 seconds (Warm-up)
-#>                0.023 seconds (Sampling)
-#>                0.042 seconds (Total)
+#>  Elapsed Time: 0.02 seconds (Warm-up)
+#>                0.025 seconds (Sampling)
+#>                0.045 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -147,9 +147,9 @@ m1 <- stan_glm(
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.02 seconds (Warm-up)
+#>  Elapsed Time: 0.019 seconds (Warm-up)
 #>                0.024 seconds (Sampling)
-#>                0.044 seconds (Total)
+#>                0.043 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -166,8 +166,8 @@ m1 <- stan_glm(
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.025 seconds (Sampling)
+#>  Elapsed Time: 0.019 seconds (Warm-up)
+#>                0.026 seconds (Sampling)
 #>                0.045 seconds (Total)
 
 # One predictor
@@ -187,8 +187,8 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.041 seconds (Warm-up)
-#>                0.043 seconds (Sampling)
+#>  Elapsed Time: 0.044 seconds (Warm-up)
+#>                0.04 seconds (Sampling)
 #>                0.084 seconds (Total)
 #> 
 #> 
@@ -206,9 +206,9 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.042 seconds (Warm-up)
+#>  Elapsed Time: 0.04 seconds (Warm-up)
 #>                0.043 seconds (Sampling)
-#>                0.085 seconds (Total)
+#>                0.083 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -225,85 +225,9 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.042 seconds (Warm-up)
-#>                0.043 seconds (Sampling)
-#>                0.085 seconds (Total)
-#> 
-#> 
-#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
-#> 
-#> Chain 4, Iteration:    1 / 2000 [  0%]  (Warmup)
-#> Chain 4, Iteration:  200 / 2000 [ 10%]  (Warmup)
-#> Chain 4, Iteration:  400 / 2000 [ 20%]  (Warmup)
-#> Chain 4, Iteration:  600 / 2000 [ 30%]  (Warmup)
-#> Chain 4, Iteration:  800 / 2000 [ 40%]  (Warmup)
-#> Chain 4, Iteration: 1000 / 2000 [ 50%]  (Warmup)
-#> Chain 4, Iteration: 1001 / 2000 [ 50%]  (Sampling)
-#> Chain 4, Iteration: 1200 / 2000 [ 60%]  (Sampling)
-#> Chain 4, Iteration: 1400 / 2000 [ 70%]  (Sampling)
-#> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
-#> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
-#> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.042 seconds (Warm-up)
-#>                0.042 seconds (Sampling)
-#>                0.084 seconds (Total)
-m3 <- update(m1, . ~ log_mass)
-#> 
-#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
-#> 
-#> Chain 1, Iteration:    1 / 2000 [  0%]  (Warmup)
-#> Chain 1, Iteration:  200 / 2000 [ 10%]  (Warmup)
-#> Chain 1, Iteration:  400 / 2000 [ 20%]  (Warmup)
-#> Chain 1, Iteration:  600 / 2000 [ 30%]  (Warmup)
-#> Chain 1, Iteration:  800 / 2000 [ 40%]  (Warmup)
-#> Chain 1, Iteration: 1000 / 2000 [ 50%]  (Warmup)
-#> Chain 1, Iteration: 1001 / 2000 [ 50%]  (Sampling)
-#> Chain 1, Iteration: 1200 / 2000 [ 60%]  (Sampling)
-#> Chain 1, Iteration: 1400 / 2000 [ 70%]  (Sampling)
-#> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
-#> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
-#> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.091 seconds (Warm-up)
-#>                0.071 seconds (Sampling)
-#>                0.162 seconds (Total)
-#> 
-#> 
-#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
-#> 
-#> Chain 2, Iteration:    1 / 2000 [  0%]  (Warmup)
-#> Chain 2, Iteration:  200 / 2000 [ 10%]  (Warmup)
-#> Chain 2, Iteration:  400 / 2000 [ 20%]  (Warmup)
-#> Chain 2, Iteration:  600 / 2000 [ 30%]  (Warmup)
-#> Chain 2, Iteration:  800 / 2000 [ 40%]  (Warmup)
-#> Chain 2, Iteration: 1000 / 2000 [ 50%]  (Warmup)
-#> Chain 2, Iteration: 1001 / 2000 [ 50%]  (Sampling)
-#> Chain 2, Iteration: 1200 / 2000 [ 60%]  (Sampling)
-#> Chain 2, Iteration: 1400 / 2000 [ 70%]  (Sampling)
-#> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
-#> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
-#> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.082 seconds (Warm-up)
-#>                0.078 seconds (Sampling)
-#>                0.16 seconds (Total)
-#> 
-#> 
-#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
-#> 
-#> Chain 3, Iteration:    1 / 2000 [  0%]  (Warmup)
-#> Chain 3, Iteration:  200 / 2000 [ 10%]  (Warmup)
-#> Chain 3, Iteration:  400 / 2000 [ 20%]  (Warmup)
-#> Chain 3, Iteration:  600 / 2000 [ 30%]  (Warmup)
-#> Chain 3, Iteration:  800 / 2000 [ 40%]  (Warmup)
-#> Chain 3, Iteration: 1000 / 2000 [ 50%]  (Warmup)
-#> Chain 3, Iteration: 1001 / 2000 [ 50%]  (Sampling)
-#> Chain 3, Iteration: 1200 / 2000 [ 60%]  (Sampling)
-#> Chain 3, Iteration: 1400 / 2000 [ 70%]  (Sampling)
-#> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
-#> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
-#> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.041 seconds (Warm-up)
-#>                0.041 seconds (Sampling)
-#>                0.082 seconds (Total)
+#>  Elapsed Time: 0.044 seconds (Warm-up)
+#>                0.044 seconds (Sampling)
+#>                0.088 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -323,6 +247,82 @@ m3 <- update(m1, . ~ log_mass)
 #>  Elapsed Time: 0.04 seconds (Warm-up)
 #>                0.042 seconds (Sampling)
 #>                0.082 seconds (Total)
+m3 <- update(m1, . ~ log_mass)
+#> 
+#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
+#> 
+#> Chain 1, Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 1, Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 1, Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 1, Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 1, Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 1, Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 1, Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 1, Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 1, Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
+#>  Elapsed Time: 0.086 seconds (Warm-up)
+#>                0.079 seconds (Sampling)
+#>                0.165 seconds (Total)
+#> 
+#> 
+#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
+#> 
+#> Chain 2, Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 2, Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 2, Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 2, Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 2, Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 2, Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 2, Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 2, Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 2, Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
+#>  Elapsed Time: 0.099 seconds (Warm-up)
+#>                0.073 seconds (Sampling)
+#>                0.172 seconds (Total)
+#> 
+#> 
+#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
+#> 
+#> Chain 3, Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 3, Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 3, Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 3, Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 3, Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 3, Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 3, Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 3, Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 3, Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
+#>  Elapsed Time: 0.089 seconds (Warm-up)
+#>                0.071 seconds (Sampling)
+#>                0.16 seconds (Total)
+#> 
+#> 
+#> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
+#> 
+#> Chain 4, Iteration:    1 / 2000 [  0%]  (Warmup)
+#> Chain 4, Iteration:  200 / 2000 [ 10%]  (Warmup)
+#> Chain 4, Iteration:  400 / 2000 [ 20%]  (Warmup)
+#> Chain 4, Iteration:  600 / 2000 [ 30%]  (Warmup)
+#> Chain 4, Iteration:  800 / 2000 [ 40%]  (Warmup)
+#> Chain 4, Iteration: 1000 / 2000 [ 50%]  (Warmup)
+#> Chain 4, Iteration: 1001 / 2000 [ 50%]  (Sampling)
+#> Chain 4, Iteration: 1200 / 2000 [ 60%]  (Sampling)
+#> Chain 4, Iteration: 1400 / 2000 [ 70%]  (Sampling)
+#> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
+#> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
+#> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
+#>  Elapsed Time: 0.087 seconds (Warm-up)
+#>                0.079 seconds (Sampling)
+#>                0.166 seconds (Total)
 
 # Two predictors
 m4 <- update(m1, . ~ neocortex + log_mass)
@@ -341,8 +341,8 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.064 seconds (Warm-up)
-#>                0.062 seconds (Sampling)
+#>  Elapsed Time: 0.063 seconds (Warm-up)
+#>                0.063 seconds (Sampling)
 #>                0.126 seconds (Total)
 #> 
 #> 
@@ -360,9 +360,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.066 seconds (Warm-up)
-#>                0.056 seconds (Sampling)
-#>                0.122 seconds (Total)
+#>  Elapsed Time: 0.069 seconds (Warm-up)
+#>                0.067 seconds (Sampling)
+#>                0.136 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -379,9 +379,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.065 seconds (Warm-up)
-#>                0.059 seconds (Sampling)
-#>                0.124 seconds (Total)
+#>  Elapsed Time: 0.067 seconds (Warm-up)
+#>                0.063 seconds (Sampling)
+#>                0.13 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -398,9 +398,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.059 seconds (Warm-up)
-#>                0.048 seconds (Sampling)
-#>                0.107 seconds (Total)
+#>  Elapsed Time: 0.065 seconds (Warm-up)
+#>                0.052 seconds (Sampling)
+#>                0.117 seconds (Total)
 ```
 
 Compare posterior to prior in each model.
@@ -416,49 +416,49 @@ p1 <- posterior_vs_prior(m1) + scale_color_manual(values = d3_colors[c(1, 4)])
 #> Drawing from prior...
 #> 
 #>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.022 seconds (Sampling)
-#>                0.042 seconds (Total)
+#>                0.025 seconds (Sampling)
+#>                0.045 seconds (Total)
 #> 
 #> 
 #>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.022 seconds (Sampling)
-#>                0.042 seconds (Total)
+#>                0.023 seconds (Sampling)
+#>                0.043 seconds (Total)
 p2 <- posterior_vs_prior(m2) + scale_color_manual(values = d3_colors[c(1, 3:4)])
 #> 
 #> Drawing from prior...
 #> 
-#>  Elapsed Time: 0.045 seconds (Warm-up)
-#>                0.046 seconds (Sampling)
-#>                0.091 seconds (Total)
-#> 
-#> 
-#>  Elapsed Time: 0.041 seconds (Warm-up)
+#>  Elapsed Time: 0.043 seconds (Warm-up)
 #>                0.041 seconds (Sampling)
-#>                0.082 seconds (Total)
+#>                0.084 seconds (Total)
+#> 
+#> 
+#>  Elapsed Time: 0.047 seconds (Warm-up)
+#>                0.04 seconds (Sampling)
+#>                0.087 seconds (Total)
 p3 <- posterior_vs_prior(m3) + scale_color_manual(values = d3_colors[c(1:2, 4)])
 #> 
 #> Drawing from prior...
 #> 
-#>  Elapsed Time: 0.056 seconds (Warm-up)
-#>                0.055 seconds (Sampling)
-#>                0.111 seconds (Total)
+#>  Elapsed Time: 0.057 seconds (Warm-up)
+#>                0.053 seconds (Sampling)
+#>                0.11 seconds (Total)
 #> 
 #> 
-#>  Elapsed Time: 0.056 seconds (Warm-up)
-#>                0.057 seconds (Sampling)
-#>                0.113 seconds (Total)
+#>  Elapsed Time: 0.057 seconds (Warm-up)
+#>                0.051 seconds (Sampling)
+#>                0.108 seconds (Total)
 p4 <- posterior_vs_prior(m4) + scale_color_manual(values = d3_colors[c(1:4)])
 #> 
 #> Drawing from prior...
 #> 
-#>  Elapsed Time: 0.048 seconds (Warm-up)
+#>  Elapsed Time: 0.051 seconds (Warm-up)
+#>                0.049 seconds (Sampling)
+#>                0.1 seconds (Total)
+#> 
+#> 
+#>  Elapsed Time: 0.054 seconds (Warm-up)
 #>                0.05 seconds (Sampling)
-#>                0.098 seconds (Total)
-#> 
-#> 
-#>  Elapsed Time: 0.05 seconds (Warm-up)
-#>                0.043 seconds (Sampling)
-#>                0.093 seconds (Total)
+#>                0.104 seconds (Total)
 cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
@@ -540,7 +540,7 @@ deviance_m4
 #> [1] -25.35542
 ```
 
-The information criteria are the deviance measures plus some penalty *k* times the number of parameters. For AIC, the penalty is *k*=2. For BIC, the penalty is the log of the number of observations, *k*=log(*n*).
+The information criteria are the deviance measures plus some penalty *k* times the number of parameters. For AIC, the penalty is *k*=2. For BIC, the penalty is the log of the number of observations, *k*=log(*n*). The penalty adjusts the in- sample deviance to get predicted value of the out-of-sample deviance. The model with the lowest predicted out-of-sample deviance is the favored model.
 
 ``` r
 # Manual AIC vs automatic
@@ -577,10 +577,10 @@ dim(log_lik(m4))
 # likelihood of each oberservation
 each_lppd <- log_lik(m4) %>% exp %>% colMeans %>% log 
 each_lppd
-#>  [1]  0.81356538  0.79471718  1.05122651  0.09888529  0.85491484
-#>  [6]  0.91574027 -0.40170834  1.01643514  0.64523931 -0.25074809
-#> [11]  0.57140996  1.06207512  1.01993640  0.96820034  0.96118200
-#> [16]  0.48245732  0.86097791
+#>  [1]  0.80841972  0.79426245  1.04645665  0.08984913  0.83833690
+#>  [6]  0.90217759 -0.36846013  1.00778422  0.65501505 -0.25878378
+#> [11]  0.56260481  1.05806815  1.01374839  0.96012110  0.95456709
+#> [16]  0.48645994  0.85250074
 ```
 
 We also need a penalty term. Here, it's the effective number of parameters (p\_waic). Each observation contributes to the penalty term, using the variance of its log-likelihoods.
@@ -590,9 +590,9 @@ We also need a penalty term. Here, it's the effective number of parameters (p\_w
 # observation 
 each_p_waic <- log_lik(m4) %>% apply(2, var)
 each_p_waic
-#>  [1] 0.23073184 0.06544767 0.04177568 0.15570291 0.11861239 0.10331418
-#>  [7] 0.70255546 0.05163060 0.13278208 0.34826676 0.12083165 0.03723206
-#> [13] 0.04516169 0.06392558 0.05911038 0.23166526 0.08964415
+#>  [1] 0.22746695 0.06555010 0.04269856 0.15943071 0.13091277 0.11548852
+#>  [7] 0.71369914 0.05419441 0.13472904 0.36132841 0.12435512 0.03929018
+#> [13] 0.04974533 0.07178094 0.06463332 0.23283352 0.09323950
 ```
 
 The WAIC is the difference in total lppd and total p\_waic on the deviance scale.
@@ -600,18 +600,18 @@ The WAIC is the difference in total lppd and total p\_waic on the deviance scale
 ``` r
 lppd <- sum(each_lppd)
 lppd
-#> [1] 11.46451
+#> [1] 11.40313
 p_waic <- sum(each_p_waic)
 p_waic
-#> [1] 2.59839
+#> [1] 2.681377
 waic <- -2 * (lppd - p_waic)
 waic
-#> [1] -17.73223
+#> [1] -17.4435
 
 # skip the summing step
 each_waic <- -2 * (each_lppd - each_p_waic)
 sum(each_waic)
-#> [1] -17.73223
+#> [1] -17.4435
 ```
 
 But because each point contributes information to the lppd and p\_waic calculations, we can compute a standard error on these numbers.
@@ -620,9 +620,9 @@ But because each point contributes information to the lppd and p\_waic calculati
 # standard error of the waics
 se <- function(xs) sqrt(length(xs) * var(xs))
 se(each_p_waic)
-#> [1] 0.6787326
+#> [1] 0.6864986
 se(each_waic)
-#> [1] 4.937585
+#> [1] 4.896972
 ```
 
 These calculations match the estimates from the loo package. The `loo::waic` estimates use expected lppd (elpd) which already subtracts p\_waic from lppd. It's *expected* because it is the log-likelihood of the in-sample data adjusted with a penalty term. The resulting value is an expectation for out-of-sample data.
@@ -630,17 +630,17 @@ These calculations match the estimates from the loo package. The `loo::waic` est
 ``` r
 # manual elpd_waic
 lppd - p_waic
-#> [1] 8.866116
+#> [1] 8.721751
 se(each_lppd - each_p_waic)
-#> [1] 2.468792
+#> [1] 2.448486
 
 loo::waic(m4)
 #> Computed from 4000 by 17 log-likelihood matrix
 #> 
 #>           Estimate  SE
-#> elpd_waic      8.9 2.5
-#> p_waic         2.6 0.7
-#> waic         -17.7 4.9
+#> elpd_waic      8.7 2.4
+#> p_waic         2.7 0.7
+#> waic         -17.4 4.9
 #> Warning: 1 (5.9%) p_waic estimates greater than 0.4.
 #> We recommend trying loo() instead.
 ```
@@ -710,10 +710,10 @@ model_summary %>%
 
 | Formula                            |  Deviance|     AIC|    waic|  se\_waic|  elpd\_waic|  se\_elpd\_waic|  p\_waic|  se\_p\_waic|  diff\_waic|  weight|
 |:-----------------------------------|---------:|-------:|-------:|---------:|-----------:|---------------:|--------:|------------:|-----------:|-------:|
-| kcal.per.g ~ neocortex + log\_mass |    -25.36|  -17.36|  -17.73|      4.94|        8.87|            2.47|     2.60|         0.68|        0.00|    0.97|
-| kcal.per.g ~ log\_mass             |    -14.74|   -8.74|   -9.43|      4.43|        4.72|            2.21|     1.89|         0.43|       -8.30|    0.02|
-| kcal.per.g ~ 1                     |    -12.46|   -8.46|   -8.82|      4.12|        4.41|            2.06|     1.36|         0.34|       -8.91|    0.01|
-| kcal.per.g ~ neocortex             |    -12.87|   -6.87|   -7.80|      3.63|        3.90|            1.81|     1.77|         0.30|       -9.93|    0.01|
+| kcal.per.g ~ neocortex + log\_mass |    -25.36|  -17.36|  -17.44|      4.90|        8.72|            2.45|     2.68|         0.69|        0.00|    0.96|
+| kcal.per.g ~ log\_mass             |    -14.74|   -8.74|   -9.62|      4.44|        4.81|            2.22|     1.83|         0.42|       -7.82|    0.02|
+| kcal.per.g ~ 1                     |    -12.46|   -8.46|   -8.95|      3.99|        4.48|            2.00|     1.25|         0.31|       -8.49|    0.01|
+| kcal.per.g ~ neocortex             |    -12.87|   -6.87|   -7.79|      3.60|        3.90|            1.80|     1.79|         0.30|       -9.65|    0.01|
 
 Remember what the book says about these weights:
 

@@ -184,7 +184,9 @@ deviance_m4
 
 The information criteria are the deviance measures plus some penalty _k_ times
 the number of parameters. For AIC, the penalty is _k_=2. For BIC, the penalty is
-the log of the number of observations, _k_=log(_n_).
+the log of the number of observations, _k_=log(_n_). The penalty adjusts the in-
+sample deviance to get predicted value of the out-of-sample deviance. The model
+with the lowest predicted out-of-sample deviance is the favored model.
 
 ```{r}
 # Manual AIC vs automatic
