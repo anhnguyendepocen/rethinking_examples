@@ -6,7 +6,7 @@ June 29, 2016
 Preamble
 --------
 
-This is notebook of code I wrote while reading Chapter 6 of [*Statistical Rethinking*](http://xcelab.net/rm/statistical-rethinking/). I don't use the author's [rethinking package](https://github.com/rmcelreath/rethinking) or any of its helper functions. I instead used rstanarm to fit the Bayesian models and loo for model comparisons, because I'm trying to stay in that ecosystem. As a result, my models have different priors and different parameter estimates.
+This is notebook of code I wrote while reading Chapter 6 of [*Statistical Rethinking*](http://xcelab.net/rm/statistical-rethinking/). I don't use the author's [rethinking package](https://github.com/rmcelreath/rethinking) or any of its helper functions. I instead used [RStanARM](http://mc-stan.org/%20interfaces/rstanarm) to fit the Bayesian models and [Loo](http://mc-stan.org/%20interfaces/loo.html) for model comparisons, because I'm trying to stay in that ecosystem. As a result, my models have different priors and different parameter estimates.
 
 ``` r
 # devtools::install_github("rmcelreath/rethinking")
@@ -43,8 +43,8 @@ str(rethinking_info, give.attr = FALSE)
 #>  $ GithubSHA1    : chr "a309712d904d1db7af1e08a76c521ab994006fd5"
 ```
 
-Fit the models
---------------
+Prepare the data
+----------------
 
 Get the primate milk data. The example models will predict the kilocalories per gram of milk using the mass of the mother (log kg) and the proportion of the brain that is neocortex. These data are from Hinde and Milligan (2011), according to `?milk`.
 
@@ -79,6 +79,9 @@ d %>% knitr::kable(digits = 3)
 | Ape              | P troglodytes           |        0.55|  33.11|      3.500|      0.763|
 | Ape              | Homo sapiens            |        0.71|  54.95|      4.006|      0.755|
 
+Fit the models
+--------------
+
 Fit four different models that we will compare later.
 
 ``` r
@@ -106,8 +109,8 @@ m1 <- stan_glm(
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.024 seconds (Sampling)
+#>  Elapsed Time: 0.021 seconds (Warm-up)
+#>                0.023 seconds (Sampling)
 #>                0.044 seconds (Total)
 #> 
 #> 
@@ -125,9 +128,9 @@ m1 <- stan_glm(
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.027 seconds (Sampling)
-#>                0.047 seconds (Total)
+#>  Elapsed Time: 0.019 seconds (Warm-up)
+#>                0.023 seconds (Sampling)
+#>                0.042 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -144,9 +147,9 @@ m1 <- stan_glm(
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.019 seconds (Warm-up)
+#>  Elapsed Time: 0.02 seconds (Warm-up)
 #>                0.024 seconds (Sampling)
-#>                0.043 seconds (Total)
+#>                0.044 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -184,9 +187,9 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.044 seconds (Warm-up)
+#>  Elapsed Time: 0.041 seconds (Warm-up)
 #>                0.043 seconds (Sampling)
-#>                0.087 seconds (Total)
+#>                0.084 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -203,8 +206,8 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.043 seconds (Warm-up)
-#>                0.042 seconds (Sampling)
+#>  Elapsed Time: 0.042 seconds (Warm-up)
+#>                0.043 seconds (Sampling)
 #>                0.085 seconds (Total)
 #> 
 #> 
@@ -222,9 +225,9 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.046 seconds (Warm-up)
-#>                0.046 seconds (Sampling)
-#>                0.092 seconds (Total)
+#>  Elapsed Time: 0.042 seconds (Warm-up)
+#>                0.043 seconds (Sampling)
+#>                0.085 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -242,8 +245,8 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
 #>  Elapsed Time: 0.042 seconds (Warm-up)
-#>                0.043 seconds (Sampling)
-#>                0.085 seconds (Total)
+#>                0.042 seconds (Sampling)
+#>                0.084 seconds (Total)
 m3 <- update(m1, . ~ log_mass)
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
@@ -260,9 +263,9 @@ m3 <- update(m1, . ~ log_mass)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.04 seconds (Warm-up)
-#>                0.042 seconds (Sampling)
-#>                0.082 seconds (Total)
+#>  Elapsed Time: 0.091 seconds (Warm-up)
+#>                0.071 seconds (Sampling)
+#>                0.162 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -279,9 +282,9 @@ m3 <- update(m1, . ~ log_mass)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.043 seconds (Warm-up)
-#>                0.04 seconds (Sampling)
-#>                0.083 seconds (Total)
+#>  Elapsed Time: 0.082 seconds (Warm-up)
+#>                0.078 seconds (Sampling)
+#>                0.16 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -298,9 +301,9 @@ m3 <- update(m1, . ~ log_mass)
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.042 seconds (Warm-up)
-#>                0.044 seconds (Sampling)
-#>                0.086 seconds (Total)
+#>  Elapsed Time: 0.041 seconds (Warm-up)
+#>                0.041 seconds (Sampling)
+#>                0.082 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -317,9 +320,9 @@ m3 <- update(m1, . ~ log_mass)
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.043 seconds (Warm-up)
-#>                0.041 seconds (Sampling)
-#>                0.084 seconds (Total)
+#>  Elapsed Time: 0.04 seconds (Warm-up)
+#>                0.042 seconds (Sampling)
+#>                0.082 seconds (Total)
 
 # Two predictors
 m4 <- update(m1, . ~ neocortex + log_mass)
@@ -338,9 +341,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.07 seconds (Warm-up)
-#>                0.067 seconds (Sampling)
-#>                0.137 seconds (Total)
+#>  Elapsed Time: 0.064 seconds (Warm-up)
+#>                0.062 seconds (Sampling)
+#>                0.126 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -357,9 +360,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.064 seconds (Warm-up)
-#>                0.06 seconds (Sampling)
-#>                0.124 seconds (Total)
+#>  Elapsed Time: 0.066 seconds (Warm-up)
+#>                0.056 seconds (Sampling)
+#>                0.122 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -377,8 +380,8 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
 #>  Elapsed Time: 0.065 seconds (Warm-up)
-#>                0.062 seconds (Sampling)
-#>                0.127 seconds (Total)
+#>                0.059 seconds (Sampling)
+#>                0.124 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -395,9 +398,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.068 seconds (Warm-up)
-#>                0.064 seconds (Sampling)
-#>                0.132 seconds (Total)
+#>  Elapsed Time: 0.059 seconds (Warm-up)
+#>                0.048 seconds (Sampling)
+#>                0.107 seconds (Total)
 ```
 
 Compare posterior to prior in each model.
@@ -413,49 +416,49 @@ p1 <- posterior_vs_prior(m1) + scale_color_manual(values = d3_colors[c(1, 4)])
 #> Drawing from prior...
 #> 
 #>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.026 seconds (Sampling)
-#>                0.046 seconds (Total)
+#>                0.022 seconds (Sampling)
+#>                0.042 seconds (Total)
 #> 
 #> 
 #>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.024 seconds (Sampling)
-#>                0.044 seconds (Total)
+#>                0.022 seconds (Sampling)
+#>                0.042 seconds (Total)
 p2 <- posterior_vs_prior(m2) + scale_color_manual(values = d3_colors[c(1, 3:4)])
 #> 
 #> Drawing from prior...
 #> 
-#>  Elapsed Time: 0.043 seconds (Warm-up)
-#>                0.045 seconds (Sampling)
-#>                0.088 seconds (Total)
+#>  Elapsed Time: 0.045 seconds (Warm-up)
+#>                0.046 seconds (Sampling)
+#>                0.091 seconds (Total)
 #> 
 #> 
-#>  Elapsed Time: 0.043 seconds (Warm-up)
-#>                0.042 seconds (Sampling)
-#>                0.085 seconds (Total)
+#>  Elapsed Time: 0.041 seconds (Warm-up)
+#>                0.041 seconds (Sampling)
+#>                0.082 seconds (Total)
 p3 <- posterior_vs_prior(m3) + scale_color_manual(values = d3_colors[c(1:2, 4)])
 #> 
 #> Drawing from prior...
 #> 
 #>  Elapsed Time: 0.056 seconds (Warm-up)
-#>                0.065 seconds (Sampling)
-#>                0.121 seconds (Total)
-#> 
-#> 
-#>  Elapsed Time: 0.051 seconds (Warm-up)
 #>                0.055 seconds (Sampling)
-#>                0.106 seconds (Total)
+#>                0.111 seconds (Total)
+#> 
+#> 
+#>  Elapsed Time: 0.056 seconds (Warm-up)
+#>                0.057 seconds (Sampling)
+#>                0.113 seconds (Total)
 p4 <- posterior_vs_prior(m4) + scale_color_manual(values = d3_colors[c(1:4)])
 #> 
 #> Drawing from prior...
 #> 
-#>  Elapsed Time: 0.053 seconds (Warm-up)
-#>                0.048 seconds (Sampling)
-#>                0.101 seconds (Total)
+#>  Elapsed Time: 0.048 seconds (Warm-up)
+#>                0.05 seconds (Sampling)
+#>                0.098 seconds (Total)
 #> 
 #> 
-#>  Elapsed Time: 0.049 seconds (Warm-up)
-#>                0.051 seconds (Sampling)
-#>                0.1 seconds (Total)
+#>  Elapsed Time: 0.05 seconds (Warm-up)
+#>                0.043 seconds (Sampling)
+#>                0.093 seconds (Total)
 cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
@@ -464,9 +467,9 @@ cowplot::plot_grid(p1, p2, p3, p4)
 Manual AIC calculation
 ----------------------
 
-To figure out what these information criteria are measuring, I want to calculate them by hand.
+To figure out what the information criteria are measuring, I want to calculate them by hand.
 
-The AIC works on the classical models, so I write a helper function to convert an RStanArm glm model into a classical glm model.
+The AIC works on classical models, so I wrote a helper function to convert an RStanArm glm model into a classical glm model.
 
 ``` r
 # Refit a stanreg model using glm. Assumes no other glm arguments are used 
@@ -560,7 +563,7 @@ BIC(glm_m4)
 Manual WAIC calculation
 -----------------------
 
-The above AIC example measured one log-likelihood based on one set of parameters. Our Bayesian models reflect a distribution of parameter estimates, and we sampled thousands of parameter estimates from the posterior distribution. As a result, we have a distribution of log-likelihoods, and the posterior information criteria will incorporate information from the distribution of log-likelihoods.
+The above AIC example measured one log-likelihood based on one set of parameters. Our Bayesian model reflects a distribution of parameter estimates, and we sampled thousands of parameter estimates from the posterior distribution. As a result, we have a distribution of log-likelihoods, and posterior information criteria will incorporate information from the distribution of log-likelihoods.
 
 The WAIC (Widely Applicable Information Criterion) is calculated using pointwise log-likelihoods. Specifically, we calculate the log-pointwise-predictive density (lppd). We observation has its own likelihood in each model, so we calculate each observation's average likelihood across models and take the log.
 
@@ -574,9 +577,10 @@ dim(log_lik(m4))
 # likelihood of each oberservation
 each_lppd <- log_lik(m4) %>% exp %>% colMeans %>% log 
 each_lppd
-#>  [1]  0.8062159  0.7967450  1.0514920  0.1039733  0.8627891  0.9160301
-#>  [7] -0.4056730  1.0133188  0.6327011 -0.2399497  0.5741003  1.0618466
-#> [13]  1.0204555  0.9692484  0.9638801  0.4813494  0.8560871
+#>  [1]  0.81356538  0.79471718  1.05122651  0.09888529  0.85491484
+#>  [6]  0.91574027 -0.40170834  1.01643514  0.64523931 -0.25074809
+#> [11]  0.57140996  1.06207512  1.01993640  0.96820034  0.96118200
+#> [16]  0.48245732  0.86097791
 ```
 
 We also need a penalty term. Here, it's the effective number of parameters (p\_waic). Each observation contributes to the penalty term, using the variance of its log-likelihoods.
@@ -586,9 +590,9 @@ We also need a penalty term. Here, it's the effective number of parameters (p\_w
 # observation 
 each_p_waic <- log_lik(m4) %>% apply(2, var)
 each_p_waic
-#>  [1] 0.26049375 0.06440188 0.04368429 0.15748117 0.12226692 0.11350211
-#>  [7] 0.78082479 0.05645529 0.15015606 0.35433094 0.12800578 0.03882088
-#> [13] 0.04720713 0.06578667 0.05992431 0.26185287 0.09746762
+#>  [1] 0.23073184 0.06544767 0.04177568 0.15570291 0.11861239 0.10331418
+#>  [7] 0.70255546 0.05163060 0.13278208 0.34826676 0.12083165 0.03723206
+#> [13] 0.04516169 0.06392558 0.05911038 0.23166526 0.08964415
 ```
 
 The WAIC is the difference in total lppd and total p\_waic on the deviance scale.
@@ -596,18 +600,18 @@ The WAIC is the difference in total lppd and total p\_waic on the deviance scale
 ``` r
 lppd <- sum(each_lppd)
 lppd
-#> [1] 11.46461
+#> [1] 11.46451
 p_waic <- sum(each_p_waic)
 p_waic
-#> [1] 2.802662
+#> [1] 2.59839
 waic <- -2 * (lppd - p_waic)
 waic
-#> [1] -17.32389
+#> [1] -17.73223
 
 # skip the summing step
 each_waic <- -2 * (each_lppd - each_p_waic)
 sum(each_waic)
-#> [1] -17.32389
+#> [1] -17.73223
 ```
 
 But because each point contributes information to the lppd and p\_waic calculations, we can compute a standard error on these numbers.
@@ -616,27 +620,27 @@ But because each point contributes information to the lppd and p\_waic calculati
 # standard error of the waics
 se <- function(xs) sqrt(length(xs) * var(xs))
 se(each_p_waic)
-#> [1] 0.751527
+#> [1] 0.6787326
 se(each_waic)
-#> [1] 5.045902
+#> [1] 4.937585
 ```
 
-These calculations match the estimates from the loo package. The loo::waic estimates use expected lppd (elpd) which already subtracts p\_waic from lppd. It's *expected* because it is the log-likelihood of the in-sample data adjusted with a penalty term. The resulting value is an expectation for out-of-sample data.
+These calculations match the estimates from the loo package. The `loo::waic` estimates use expected lppd (elpd) which already subtracts p\_waic from lppd. It's *expected* because it is the log-likelihood of the in-sample data adjusted with a penalty term. The resulting value is an expectation for out-of-sample data.
 
 ``` r
 # manual elpd_waic
 lppd - p_waic
-#> [1] 8.661947
+#> [1] 8.866116
 se(each_lppd - each_p_waic)
-#> [1] 2.522951
+#> [1] 2.468792
 
 loo::waic(m4)
 #> Computed from 4000 by 17 log-likelihood matrix
 #> 
 #>           Estimate  SE
-#> elpd_waic      8.7 2.5
-#> p_waic         2.8 0.8
-#> waic         -17.3 5.0
+#> elpd_waic      8.9 2.5
+#> p_waic         2.6 0.7
+#> waic         -17.7 4.9
 #> Warning: 1 (5.9%) p_waic estimates greater than 0.4.
 #> We recommend trying loo() instead.
 ```
@@ -646,9 +650,9 @@ Getting WAIC for the models
 
 Get the WAIC using the loo package.
 
-I'm going to experiment with the fitting-many-models, data-frame-of-models technique here. That means doing some unconventional things with data-frames.
+I'm going to experiment with the [many-models](http://r4ds.had.co.nz/many-models.html)/data-frame-of-models technique here. That means doing some as-of-2016 unconventional things with data-frames.
 
-Basically, I make a data-frame with one row per model and then do things to each model, storing the results of those operations as new columns in the data-frame. Specifically, I calculate the WAIC of the Stan models and refit the models using the classical technique so I can get an AIC value to compare to the WAIC value.
+Basically, I make a data-frame with one row per model and then do things to each model, storing the results of those operations as new columns in the data-frame. Specifically, I calculate the WAIC of the Stan models and refit the models using the classical technique so I can get an AIC value to compare to the WAIC value. Then I will compute Akaike weights for based on ELPD values.
 
 ``` r
 # Get a data-frame summary from a loo::waic object
@@ -674,16 +678,51 @@ model_summary <- data_frame(StanFit = list(m1, m2, m3, m4)) %>%
   # columns from the nested data-frame
   unnest(WAIC)
 
+model_summary
+#> # A tibble: 4 x 11
+#>         StanFit                           Formula ClassicalFit  Deviance
+#>          <list>                             <chr>       <list>     <dbl>
+#> 1 <S3: stanreg>                    kcal.per.g ~ 1    <S3: glm> -12.45830
+#> 2 <S3: stanreg>            kcal.per.g ~ neocortex    <S3: glm> -12.87418
+#> 3 <S3: stanreg>             kcal.per.g ~ log_mass    <S3: glm> -14.73810
+#> 4 <S3: stanreg> kcal.per.g ~ neocortex + log_mass    <S3: glm> -25.35542
+#> # ... with 7 more variables: AIC <dbl>, waic <dbl>, se_waic <dbl>,
+#> #   elpd_waic <dbl>, se_elpd_waic <dbl>, p_waic <dbl>, se_p_waic <dbl>
+```
+
+The `rethinking::compare` function computes differences in WAIC and model weights automatically, but won't work with RStanARM models so we compute those by hand.
+
+``` r
+model_summary <- model_summary %>% 
+  mutate(diff_waic = min(waic) - waic,
+         weight = exp(elpd_waic) / sum(exp(elpd_waic)))
+```
+
+We obtain the following table summarizing the models:
+
+``` r
 # We need to exclude the list columns in order to print a formatted table 
 model_summary %>% 
   select(-StanFit, -ClassicalFit) %>% 
-  arrange(waic) %>% 
-  knitr::kable(, digits = 2) 
+  arrange(desc(weight)) %>% 
+  knitr::kable(digits = 2) 
 ```
 
-| Formula                            |  Deviance|     AIC|    waic|  se\_waic|  elpd\_waic|  se\_elpd\_waic|  p\_waic|  se\_p\_waic|
-|:-----------------------------------|---------:|-------:|-------:|---------:|-----------:|---------------:|--------:|------------:|
-| kcal.per.g ~ neocortex + log\_mass |    -25.36|  -17.36|  -17.32|      5.05|        8.66|            2.52|     2.80|         0.75|
-| kcal.per.g ~ log\_mass             |    -14.74|   -8.74|   -9.59|      4.44|        4.80|            2.22|     1.84|         0.41|
-| kcal.per.g ~ 1                     |    -12.46|   -8.46|   -9.01|      4.10|        4.51|            2.05|     1.25|         0.31|
-| kcal.per.g ~ neocortex             |    -12.87|   -6.87|   -7.84|      3.68|        3.92|            1.84|     1.80|         0.31|
+| Formula                            |  Deviance|     AIC|    waic|  se\_waic|  elpd\_waic|  se\_elpd\_waic|  p\_waic|  se\_p\_waic|  diff\_waic|  weight|
+|:-----------------------------------|---------:|-------:|-------:|---------:|-----------:|---------------:|--------:|------------:|-----------:|-------:|
+| kcal.per.g ~ neocortex + log\_mass |    -25.36|  -17.36|  -17.73|      4.94|        8.87|            2.47|     2.60|         0.68|        0.00|    0.97|
+| kcal.per.g ~ log\_mass             |    -14.74|   -8.74|   -9.43|      4.43|        4.72|            2.21|     1.89|         0.43|       -8.30|    0.02|
+| kcal.per.g ~ 1                     |    -12.46|   -8.46|   -8.82|      4.12|        4.41|            2.06|     1.36|         0.34|       -8.91|    0.01|
+| kcal.per.g ~ neocortex             |    -12.87|   -6.87|   -7.80|      3.63|        3.90|            1.81|     1.77|         0.30|       -9.93|    0.01|
+
+Remember what the book says about these weights:
+
+> But what do these weights mean? There actually isn't a consensus about that. But here's Akaike's interpretation, which is common.
+>
+> > A model's weight is an estimate of the probability that the model will make the best predictions on new data, conditional on the set of models considered.
+>
+> Here’s the heuristic explanation. First, regard WAIC as the expected deviance of a model on future data. That is to say that WAIC gives us an estimate of E(D\_test). Akaike weights convert these deviance values, which are log-likelihoods, to plain likelihoods and then standardize them all. This is just like Bayes’ theorem uses a sum in the denominator to standardize the product of the likelihood and prior. Therefore the Akaike weights are analogous to posterior probabilities of models, conditional on expected future data.
+
+McElreath goes on to note "However, given all the strong assumptions about repeat sampling that go into calculating WAIC, you cannot take this heuristic too seriously." The authors of the loo package themselves [no longer provide weights](https://github.com/stan-dev/loo/releases/tag/v0.1.5), citing a different limitation.
+
+> In previous versions of **loo** model weights were also reported by `compare`. We have removed the weights because they were based only on the point estimate of the elpd values ignoring the uncertainty.

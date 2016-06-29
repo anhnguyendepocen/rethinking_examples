@@ -14,9 +14,10 @@ knitr::opts_chunk$set(echo = TRUE, comment = "#>", collapse = TRUE)
 This is notebook of code I wrote while reading Chapter 6 of [_Statistical
 Rethinking_](http://xcelab.net/rm/statistical-rethinking/). I don't use the
 author's [rethinking package](https://github.com/rmcelreath/rethinking) or
-any of its helper functions. I instead used rstanarm to fit the Bayesian
-models and loo for model comparisons, because I'm trying to stay in that
-ecosystem. As a result, my models have different priors and different parameter 
+any of its helper functions. I instead used [RStanARM](http://mc-stan.org/
+interfaces/rstanarm) to fit the Bayesian models and [Loo](http://mc-stan.org/
+interfaces/loo.html) for model comparisons, because I'm trying to stay in that
+ecosystem. As a result, my models have different priors and different parameter
 estimates.
 
 ```{r packages}
@@ -36,7 +37,7 @@ str(rethinking_info, give.attr = FALSE)
 ```
 
 
-## Fit the models
+## Prepare the data
 
 Get the primate milk data. The example models will predict the kilocalories
 per gram of milk using the mass of the mother (log kg) and the proportion of
@@ -54,6 +55,7 @@ d <- milk %>%
 d %>% knitr::kable(digits = 3)
 ```
 
+## Fit the models
 
 Fit four different models that we will compare later.
 
@@ -96,10 +98,10 @@ cowplot::plot_grid(p1, p2, p3, p4)
 
 ## Manual AIC calculation
 
-To figure out what these information criteria are measuring, I want to calculate
+To figure out what the information criteria are measuring, I want to calculate
 them by hand.
 
-The AIC works on the classical models, so I write a helper function to convert
+The AIC works on classical models, so I wrote a helper function to convert
 an RStanArm glm model into a classical glm model.
 
 ```{r}
@@ -204,9 +206,9 @@ BIC(glm_m4)
 ## Manual WAIC calculation
 
 The above AIC example measured one log-likelihood based on one set of
-parameters. Our Bayesian models reflect a distribution of parameter estimates,
+parameters. Our Bayesian model reflects a distribution of parameter estimates,
 and we sampled thousands of parameter estimates from the posterior distribution.
-As a result, we have a distribution of log-likelihoods, and the posterior
+As a result, we have a distribution of log-likelihoods, and posterior
 information criteria will incorporate information from the distribution of 
 log-likelihoods.
 
@@ -263,7 +265,7 @@ se(each_p_waic)
 se(each_waic)
 ```
 
-These calculations match the estimates from the loo package. The loo::waic
+These calculations match the estimates from the loo package. The `loo::waic`
 estimates use expected lppd (elpd) which already subtracts p_waic from lppd.
 It's _expected_ because it is the log-likelihood of the in-sample data adjusted
 with a penalty term. The resulting value is an expectation for out-of-sample
@@ -293,14 +295,16 @@ loo::waic(m4)
 
 Get the WAIC using the loo package.
 
-I'm going to experiment with the fitting-many-models, data-frame-of-models
-technique here. That means doing some unconventional things with data-frames.
+I'm going to experiment with the
+[many-models](http://r4ds.had.co.nz/many-models.html)/data-frame-of-models 
+technique here. That means doing some as-of-2016 unconventional things with 
+data-frames.
 
 Basically, I make a data-frame with one row per model and then do things to each
 model, storing the results of those operations as new columns in the data-frame.
 Specifically, I calculate the WAIC of the Stan models and refit the models
 using the classical technique so I can get an AIC value to compare to the WAIC
-value.
+value. Then I will compute Akaike weights for based on ELPD values.
 
 ```{r}
 # Get a data-frame summary from a loo::waic object
@@ -326,9 +330,53 @@ model_summary <- data_frame(StanFit = list(m1, m2, m3, m4)) %>%
   # columns from the nested data-frame
   unnest(WAIC)
 
+model_summary
+```
+
+The `rethinking::compare` function computes differences in WAIC and model
+weights automatically, but won't work with RStanARM models so we compute those
+by hand.
+
+```{r}
+model_summary <- model_summary %>% 
+  mutate(diff_waic = min(waic) - waic,
+         weight = exp(elpd_waic) / sum(exp(elpd_waic)))
+```
+
+We obtain the following table summarizing the models:
+
+```{r}
 # We need to exclude the list columns in order to print a formatted table 
 model_summary %>% 
   select(-StanFit, -ClassicalFit) %>% 
-  arrange(waic) %>% 
-  knitr::kable(, digits = 2) 
+  arrange(desc(weight)) %>% 
+  knitr::kable(digits = 2) 
 ```
+
+Remember what the book says about these weights:
+
+> But what do these weights mean? There actually isn't a consensus about that.
+> But here's Akaike's interpretation, which is common.
+> 
+> > A model's weight is an estimate of the probability that the model
+> > will make the best predictions on new data, conditional on the set of models
+> > considered.
+> 
+> Here’s the heuristic explanation. First, regard WAIC as the expected deviance
+> of a model on future data. That is to say that WAIC gives us an estimate of
+> E(D_test). Akaike weights convert these deviance values, which are
+> log-likelihoods, to plain likelihoods and then standardize them all. This is
+> just like Bayes’ theorem uses a sum in the denominator to standardize the 
+> product of the likelihood and prior. Therefore the Akaike weights are analogous
+> to posterior probabilities of models, conditional on expected future data.
+
+McElreath goes on to note "However, given all the strong assumptions about
+repeat sampling that go into calculating WAIC, you cannot take this heuristic
+too seriously." The authors of the loo package themselves 
+[no longer provide weights](https://github.com/stan-dev/loo/releases/tag/v0.1.5), 
+citing a different limitation.
+
+> In previous versions of **loo** model weights were also reported by `compare`.
+> We have removed the weights because they were based only on the point estimate
+> of the elpd values ignoring the uncertainty.
+
