@@ -98,11 +98,14 @@ cowplot::plot_grid(p1, p2, p3, p4)
 
 ## Manual AIC calculation
 
-To figure out what the information criteria are measuring, I want to calculate
-them by hand.
+Deviance measures relative model fit using the log-likelihood of the data.
+The information criteria adjust the deviance to make a prediction about the
+model's deviance given some new out-of-sample data. These information criterion
+therefore estimate a model's relative predictive accurary.
 
-The AIC works on classical models, so I wrote a helper function to convert
-an RStanArm glm model into a classical glm model.
+To figure out what the information criteria are measuring, I want to calculate
+them by hand. The AIC works on classical models, so I wrote a helper function to
+convert an RStanArm glm model into a classical glm model.
 
 ```{r}
 # Refit a stanreg model using glm. Assumes no other glm arguments are used 
@@ -134,9 +137,9 @@ density of the fitted-value curve at the observed value is the likelihood of the
 data.
 
 To compute the likelihood of each observation, we find the density of
-observations on their fitted-value curves. These are three such densities. (Code
-omitted because it's hairy base-graphics code built from the example code
-in `?dnorm`.)
+observations on their fitted-value curves. These are three such densities from
+model 4. (Code omitted because it's hairy base-graphics code built from the
+example code in `?dnorm`.)
 
 ```{r likelihood curves, echo = FALSE}
 # Here are three likelihoods from the model.

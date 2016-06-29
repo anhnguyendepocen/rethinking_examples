@@ -109,9 +109,9 @@ m1 <- stan_glm(
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.019 seconds (Warm-up)
-#>                0.026 seconds (Sampling)
-#>                0.045 seconds (Total)
+#>  Elapsed Time: 0.021 seconds (Warm-up)
+#>                0.028 seconds (Sampling)
+#>                0.049 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -147,9 +147,9 @@ m1 <- stan_glm(
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.019 seconds (Warm-up)
-#>                0.024 seconds (Sampling)
-#>                0.043 seconds (Total)
+#>  Elapsed Time: 0.021 seconds (Warm-up)
+#>                0.025 seconds (Sampling)
+#>                0.046 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -166,9 +166,9 @@ m1 <- stan_glm(
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.019 seconds (Warm-up)
-#>                0.026 seconds (Sampling)
-#>                0.045 seconds (Total)
+#>  Elapsed Time: 0.02 seconds (Warm-up)
+#>                0.023 seconds (Sampling)
+#>                0.043 seconds (Total)
 
 # One predictor
 m2 <- update(m1, . ~ neocortex)
@@ -187,9 +187,9 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.044 seconds (Warm-up)
-#>                0.04 seconds (Sampling)
-#>                0.084 seconds (Total)
+#>  Elapsed Time: 0.042 seconds (Warm-up)
+#>                0.044 seconds (Sampling)
+#>                0.086 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -206,9 +206,9 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.04 seconds (Warm-up)
-#>                0.043 seconds (Sampling)
-#>                0.083 seconds (Total)
+#>  Elapsed Time: 0.042 seconds (Warm-up)
+#>                0.047 seconds (Sampling)
+#>                0.089 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -226,8 +226,8 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
 #>  Elapsed Time: 0.044 seconds (Warm-up)
-#>                0.044 seconds (Sampling)
-#>                0.088 seconds (Total)
+#>                0.04 seconds (Sampling)
+#>                0.084 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -244,9 +244,9 @@ m2 <- update(m1, . ~ neocortex)
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.04 seconds (Warm-up)
-#>                0.042 seconds (Sampling)
-#>                0.082 seconds (Total)
+#>  Elapsed Time: 0.042 seconds (Warm-up)
+#>                0.046 seconds (Sampling)
+#>                0.088 seconds (Total)
 m3 <- update(m1, . ~ log_mass)
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
@@ -263,9 +263,9 @@ m3 <- update(m1, . ~ log_mass)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.086 seconds (Warm-up)
-#>                0.079 seconds (Sampling)
-#>                0.165 seconds (Total)
+#>  Elapsed Time: 0.094 seconds (Warm-up)
+#>                0.083 seconds (Sampling)
+#>                0.177 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -282,9 +282,9 @@ m3 <- update(m1, . ~ log_mass)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.099 seconds (Warm-up)
-#>                0.073 seconds (Sampling)
-#>                0.172 seconds (Total)
+#>  Elapsed Time: 0.087 seconds (Warm-up)
+#>                0.08 seconds (Sampling)
+#>                0.167 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -320,9 +320,9 @@ m3 <- update(m1, . ~ log_mass)
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.087 seconds (Warm-up)
-#>                0.079 seconds (Sampling)
-#>                0.166 seconds (Total)
+#>  Elapsed Time: 0.104 seconds (Warm-up)
+#>                0.081 seconds (Sampling)
+#>                0.185 seconds (Total)
 
 # Two predictors
 m4 <- update(m1, . ~ neocortex + log_mass)
@@ -341,9 +341,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 1, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 1, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.063 seconds (Warm-up)
-#>                0.063 seconds (Sampling)
-#>                0.126 seconds (Total)
+#>  Elapsed Time: 0.074 seconds (Warm-up)
+#>                0.068 seconds (Sampling)
+#>                0.142 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
@@ -360,9 +360,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 2, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 2, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.069 seconds (Warm-up)
-#>                0.067 seconds (Sampling)
-#>                0.136 seconds (Total)
+#>  Elapsed Time: 0.064 seconds (Warm-up)
+#>                0.056 seconds (Sampling)
+#>                0.12 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
@@ -379,9 +379,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 3, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 3, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.067 seconds (Warm-up)
-#>                0.063 seconds (Sampling)
-#>                0.13 seconds (Total)
+#>  Elapsed Time: 0.065 seconds (Warm-up)
+#>                0.058 seconds (Sampling)
+#>                0.123 seconds (Total)
 #> 
 #> 
 #> SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
@@ -398,9 +398,9 @@ m4 <- update(m1, . ~ neocortex + log_mass)
 #> Chain 4, Iteration: 1600 / 2000 [ 80%]  (Sampling)
 #> Chain 4, Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4, Iteration: 2000 / 2000 [100%]  (Sampling)
-#>  Elapsed Time: 0.065 seconds (Warm-up)
-#>                0.052 seconds (Sampling)
-#>                0.117 seconds (Total)
+#>  Elapsed Time: 0.063 seconds (Warm-up)
+#>                0.057 seconds (Sampling)
+#>                0.12 seconds (Total)
 ```
 
 Compare posterior to prior in each model.
@@ -415,50 +415,50 @@ p1 <- posterior_vs_prior(m1) + scale_color_manual(values = d3_colors[c(1, 4)])
 #> 
 #> Drawing from prior...
 #> 
-#>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.025 seconds (Sampling)
+#>  Elapsed Time: 0.021 seconds (Warm-up)
+#>                0.024 seconds (Sampling)
 #>                0.045 seconds (Total)
 #> 
 #> 
-#>  Elapsed Time: 0.02 seconds (Warm-up)
-#>                0.023 seconds (Sampling)
-#>                0.043 seconds (Total)
+#>  Elapsed Time: 0.021 seconds (Warm-up)
+#>                0.024 seconds (Sampling)
+#>                0.045 seconds (Total)
 p2 <- posterior_vs_prior(m2) + scale_color_manual(values = d3_colors[c(1, 3:4)])
 #> 
 #> Drawing from prior...
 #> 
+#>  Elapsed Time: 0.045 seconds (Warm-up)
+#>                0.049 seconds (Sampling)
+#>                0.094 seconds (Total)
+#> 
+#> 
 #>  Elapsed Time: 0.043 seconds (Warm-up)
-#>                0.041 seconds (Sampling)
-#>                0.084 seconds (Total)
-#> 
-#> 
-#>  Elapsed Time: 0.047 seconds (Warm-up)
-#>                0.04 seconds (Sampling)
-#>                0.087 seconds (Total)
+#>                0.046 seconds (Sampling)
+#>                0.089 seconds (Total)
 p3 <- posterior_vs_prior(m3) + scale_color_manual(values = d3_colors[c(1:2, 4)])
 #> 
 #> Drawing from prior...
 #> 
-#>  Elapsed Time: 0.057 seconds (Warm-up)
-#>                0.053 seconds (Sampling)
-#>                0.11 seconds (Total)
+#>  Elapsed Time: 0.058 seconds (Warm-up)
+#>                0.062 seconds (Sampling)
+#>                0.12 seconds (Total)
 #> 
 #> 
-#>  Elapsed Time: 0.057 seconds (Warm-up)
-#>                0.051 seconds (Sampling)
-#>                0.108 seconds (Total)
+#>  Elapsed Time: 0.052 seconds (Warm-up)
+#>                0.05 seconds (Sampling)
+#>                0.102 seconds (Total)
 p4 <- posterior_vs_prior(m4) + scale_color_manual(values = d3_colors[c(1:4)])
 #> 
 #> Drawing from prior...
 #> 
 #>  Elapsed Time: 0.051 seconds (Warm-up)
-#>                0.049 seconds (Sampling)
-#>                0.1 seconds (Total)
+#>                0.046 seconds (Sampling)
+#>                0.097 seconds (Total)
 #> 
 #> 
-#>  Elapsed Time: 0.054 seconds (Warm-up)
-#>                0.05 seconds (Sampling)
-#>                0.104 seconds (Total)
+#>  Elapsed Time: 0.052 seconds (Warm-up)
+#>                0.043 seconds (Sampling)
+#>                0.095 seconds (Total)
 cowplot::plot_grid(p1, p2, p3, p4)
 ```
 
@@ -467,9 +467,9 @@ cowplot::plot_grid(p1, p2, p3, p4)
 Manual AIC calculation
 ----------------------
 
-To figure out what the information criteria are measuring, I want to calculate them by hand.
+Deviance measures relative model fit using the log-likelihood of the data. The information criteria adjust the deviance to make a prediction about the model's deviance given some new out-of-sample data. These information criterion therefore estimate a model's relative predictive accurary.
 
-The AIC works on classical models, so I wrote a helper function to convert an RStanArm glm model into a classical glm model.
+To figure out what the information criteria are measuring, I want to calculate them by hand. The AIC works on classical models, so I wrote a helper function to convert an RStanArm glm model into a classical glm model.
 
 ``` r
 # Refit a stanreg model using glm. Assumes no other glm arguments are used 
@@ -496,7 +496,7 @@ sigma_ml <- function(m) {
 
 According to our model, each observation falls on a normal curve with a mean equal to fitted value, and a standard deviation equal to model sigma. The density of the fitted-value curve at the observed value is the likelihood of the data.
 
-To compute the likelihood of each observation, we find the density of observations on their fitted-value curves. These are three such densities. (Code omitted because it's hairy base-graphics code built from the example code in `?dnorm`.)
+To compute the likelihood of each observation, we find the density of observations on their fitted-value curves. These are three such densities from model 4. (Code omitted because it's hairy base-graphics code built from the example code in `?dnorm`.)
 
 ![](06-InformationCriteria_files/figure-markdown_github/likelihood%20curves-1.png)
 
@@ -577,10 +577,10 @@ dim(log_lik(m4))
 # likelihood of each oberservation
 each_lppd <- log_lik(m4) %>% exp %>% colMeans %>% log 
 each_lppd
-#>  [1]  0.80841972  0.79426245  1.04645665  0.08984913  0.83833690
-#>  [6]  0.90217759 -0.36846013  1.00778422  0.65501505 -0.25878378
-#> [11]  0.56260481  1.05806815  1.01374839  0.96012110  0.95456709
-#> [16]  0.48645994  0.85250074
+#>  [1]  0.80569857  0.79391889  1.04745275  0.09474761  0.85108037
+#>  [6]  0.91072738 -0.38648017  1.01269419  0.64626088 -0.25505588
+#> [11]  0.56958283  1.06095646  1.01818995  0.96596231  0.95877792
+#> [16]  0.48165390  0.85905590
 ```
 
 We also need a penalty term. Here, it's the effective number of parameters (p\_waic). Each observation contributes to the penalty term, using the variance of its log-likelihoods.
@@ -590,9 +590,9 @@ We also need a penalty term. Here, it's the effective number of parameters (p\_w
 # observation 
 each_p_waic <- log_lik(m4) %>% apply(2, var)
 each_p_waic
-#>  [1] 0.22746695 0.06555010 0.04269856 0.15943071 0.13091277 0.11548852
-#>  [7] 0.71369914 0.05419441 0.13472904 0.36132841 0.12435512 0.03929018
-#> [13] 0.04974533 0.07178094 0.06463332 0.23283352 0.09323950
+#>  [1] 0.25980875 0.07067864 0.04352324 0.15433978 0.12202764 0.10803487
+#>  [7] 0.76139843 0.05412125 0.13698848 0.34833997 0.12097157 0.03889607
+#> [13] 0.04813928 0.06937805 0.06396749 0.22767460 0.09137604
 ```
 
 The WAIC is the difference in total lppd and total p\_waic on the deviance scale.
@@ -600,18 +600,18 @@ The WAIC is the difference in total lppd and total p\_waic on the deviance scale
 ``` r
 lppd <- sum(each_lppd)
 lppd
-#> [1] 11.40313
+#> [1] 11.43522
 p_waic <- sum(each_p_waic)
 p_waic
-#> [1] 2.681377
+#> [1] 2.719664
 waic <- -2 * (lppd - p_waic)
 waic
-#> [1] -17.4435
+#> [1] -17.43112
 
 # skip the summing step
 each_waic <- -2 * (each_lppd - each_p_waic)
 sum(each_waic)
-#> [1] -17.4435
+#> [1] -17.43112
 ```
 
 But because each point contributes information to the lppd and p\_waic calculations, we can compute a standard error on these numbers.
@@ -620,9 +620,9 @@ But because each point contributes information to the lppd and p\_waic calculati
 # standard error of the waics
 se <- function(xs) sqrt(length(xs) * var(xs))
 se(each_p_waic)
-#> [1] 0.6864986
+#> [1] 0.7288682
 se(each_waic)
-#> [1] 4.896972
+#> [1] 4.984191
 ```
 
 These calculations match the estimates from the loo package. The `loo::waic` estimates use expected lppd (elpd) which already subtracts p\_waic from lppd. It's *expected* because it is the log-likelihood of the in-sample data adjusted with a penalty term. The resulting value is an expectation for out-of-sample data.
@@ -630,17 +630,17 @@ These calculations match the estimates from the loo package. The `loo::waic` est
 ``` r
 # manual elpd_waic
 lppd - p_waic
-#> [1] 8.721751
+#> [1] 8.71556
 se(each_lppd - each_p_waic)
-#> [1] 2.448486
+#> [1] 2.492096
 
 loo::waic(m4)
 #> Computed from 4000 by 17 log-likelihood matrix
 #> 
 #>           Estimate  SE
-#> elpd_waic      8.7 2.4
+#> elpd_waic      8.7 2.5
 #> p_waic         2.7 0.7
-#> waic         -17.4 4.9
+#> waic         -17.4 5.0
 #> Warning: 1 (5.9%) p_waic estimates greater than 0.4.
 #> We recommend trying loo() instead.
 ```
@@ -710,10 +710,10 @@ model_summary %>%
 
 | Formula                            |  Deviance|     AIC|    waic|  se\_waic|  elpd\_waic|  se\_elpd\_waic|  p\_waic|  se\_p\_waic|  diff\_waic|  weight|
 |:-----------------------------------|---------:|-------:|-------:|---------:|-----------:|---------------:|--------:|------------:|-----------:|-------:|
-| kcal.per.g ~ neocortex + log\_mass |    -25.36|  -17.36|  -17.44|      4.90|        8.72|            2.45|     2.68|         0.69|        0.00|    0.96|
-| kcal.per.g ~ log\_mass             |    -14.74|   -8.74|   -9.62|      4.44|        4.81|            2.22|     1.83|         0.42|       -7.82|    0.02|
-| kcal.per.g ~ 1                     |    -12.46|   -8.46|   -8.95|      3.99|        4.48|            2.00|     1.25|         0.31|       -8.49|    0.01|
-| kcal.per.g ~ neocortex             |    -12.87|   -6.87|   -7.79|      3.60|        3.90|            1.80|     1.79|         0.30|       -9.65|    0.01|
+| kcal.per.g ~ neocortex + log\_mass |    -25.36|  -17.36|  -17.43|      4.98|        8.72|            2.49|     2.72|         0.73|        0.00|    0.96|
+| kcal.per.g ~ log\_mass             |    -14.74|   -8.74|   -9.56|      4.41|        4.78|            2.20|     1.83|         0.42|       -7.87|    0.02|
+| kcal.per.g ~ 1                     |    -12.46|   -8.46|   -9.01|      4.10|        4.51|            2.05|     1.26|         0.32|       -8.42|    0.01|
+| kcal.per.g ~ neocortex             |    -12.87|   -6.87|   -7.62|      3.60|        3.81|            1.80|     1.81|         0.30|       -9.82|    0.01|
 
 Remember what the book says about these weights:
 
