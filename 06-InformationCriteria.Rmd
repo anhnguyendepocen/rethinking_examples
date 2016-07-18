@@ -75,13 +75,15 @@ m3 <- update(m1, . ~ log_mass)
 
 # Two predictors
 m4 <- update(m1, . ~ neocortex + log_mass)
-
 ```
 
 ```{r}
 summary(m1)
+
 summary(m2)
+
 summary(m3)
+
 summary(m4)
 ```
 
