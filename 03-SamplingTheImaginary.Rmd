@@ -113,6 +113,7 @@ dens$x[which.max(dens$y)]
 library("tibble")
 library("dplyr")
 library("tidyr")
+library("ggplot2")
 data(homeworkch3, package = "rethinking")
 
 # 100 two-children families. 1: Child is a boy. 0: Girl.
@@ -129,7 +130,6 @@ df_long <- df %>%
   readr::type_convert() %>% 
   arrange(Family, Child)
 df_long
-
 ```
 
 **3H1. Using grid approximation, compute the posterior distribution for the
@@ -157,8 +157,9 @@ posterior distribution you calculated above. Use these samples to estimate the
 50%, 89%, and 97% highest posterior density intervals.**
 
 ```{r}
-samples <- sample(p_grid, prob = posterior, size = 1e5, replace = TRUE)
-plot(density(samples))
+samples <- sample(p_grid, prob = posterior, size = 1e4, replace = TRUE)
+
+ggplot() + geom_density(aes(x = samples))
 
 # HPDI returned in a data-frame with a column for probability level
 tidy_hpdi <- function(xs, prob) {
@@ -184,10 +185,16 @@ up with 10,000 numbers, each one a count of boys out of 200 births. Compare the
 distribution of predicted numbers of boys to the actual count in the data (111
 boys out of 200 births).**
 
-```{r}
+```{r boys born}
 replicates <- rbinom(n = length(samples), size = 200, prob = samples)
-plot(density(replicates))
-abline(v = sum(births))
+obs_reps <- replicates[replicates == sum(births)]
+
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") + 
+  labs(x = "(Simulated) Num Boys in 2-Child Families",
+       y = "Frequency in 10,000 Simulations")
 ```
 
 **3H4. Now compare 10,000 counts of boys from 100 simulated first borns only
@@ -197,10 +204,16 @@ this light?**
 The data don't fall squarely in the middle of the simulations. But they fall in
 40% HPDI.
 
-```{r}
+```{r first born boys}
 replicates <- rbinom(n = length(samples), size = 100, prob = samples)
-plot(density(replicates))
-abline(v = sum(df$Child1))
+obs_reps <- replicates[replicates == sum(birth1)]
+
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") + 
+  labs(x = "(Simulated) Num Boys in 1-Child Families",
+       y = "Frequency in 10,000 Simulations")
 
 sum(df$Child1)
 tidy_hpdi(replicates, .4)
@@ -218,7 +231,7 @@ going on in these data?**
 The parents want the second child to be a boy. The number of boys born after
 girls falls on the extreme edge of the simulations.
 
-```{r}
+```{r boys after girls}
 n_girl_birth1 <- sum(birth1 == 0)
 n_girl_birth1
 
@@ -228,15 +241,23 @@ boys_after_girls <- df %>%
 boys_after_girls
 
 replicates <- rbinom(n = length(samples), size = n_girl_birth1, prob = samples)
-plot(density(replicates))
-abline(v = boys_after_girls)
+obs_reps <- replicates[replicates == boys_after_girls]
+
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") +
+  geom_vline(xintercept = boys_after_girls, 
+             color = rethinking::rethink_palette[1]) +
+  labs(x = "(Simulated) Num Boys Born after Girls in 2-Child Fams",
+       y = "Frequency in 10,000 Simulations")
 ```
 
 It's possible that they want one of each gender. The number of boys born after
 girls is also kind of skewed away from the simulations, but nowhere near as
 extremely. Maybe because some parents are fine with two boys.
 
-```{r}
+```{r boys after boys}
 n_boy_birth1 <- sum(birth1 == 1)
 
 girls_after_boys <- df %>% 
@@ -250,9 +271,16 @@ boys_after_boys <- df %>%
 boys_after_boys
 
 replicates <- rbinom(n = length(samples), size = n_boy_birth1, prob = samples)
-plot(density(replicates))
-abline(v = boys_after_boys)
+obs_reps <- replicates[replicates == boys_after_boys]
 
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") +
+  geom_vline(xintercept = boys_after_boys, 
+             color = rethinking::rethink_palette[1]) +
+  labs(x = "(Simulated) Num Boys Born after Boys in 2-Child Fams",
+       y = "Frequency in 10,000 Simulations")
 ```
 
 

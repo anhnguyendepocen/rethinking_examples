@@ -101,15 +101,15 @@ dens
 #> Call:
 #>  density.default(x = samples)
 #> 
-#> Data: samples (10000 obs.);  Bandwidth 'bw' = 0.01989
+#> Data: samples (10000 obs.);  Bandwidth 'bw' = 0.02012
 #> 
-#>        x                 y            
-#>  Min.   :0.07948   Min.   :0.0000242  
-#>  1st Qu.:0.31451   1st Qu.:0.1008201  
-#>  Median :0.54955   Median :0.7759074  
-#>  Mean   :0.54955   Mean   :1.0626218  
-#>  3rd Qu.:0.78459   3rd Qu.:1.9653318  
-#>  Max.   :1.01962   Max.   :2.7782789
+#>        x                y           
+#>  Min.   :0.1028   Min.   :0.000034  
+#>  1st Qu.:0.3357   1st Qu.:0.106075  
+#>  Median :0.5686   Median :0.825556  
+#>  Mean   :0.5686   Mean   :1.072483  
+#>  3rd Qu.:0.8014   3rd Qu.:2.026009  
+#>  Max.   :1.0343   Max.   :2.721891
 plot(dens)
 ```
 
@@ -117,7 +117,7 @@ plot(dens)
 
 ``` r
 dens$x[which.max(dens$y)]
-#> [1] 0.6608588
+#> [1] 0.6679169
 ```
 
 Practice
@@ -127,7 +127,9 @@ Practice
 
 ``` r
 library("tibble")
+#> Warning: package 'tibble' was built under R version 3.2.5
 library("dplyr")
+#> Warning: package 'dplyr' was built under R version 3.2.5
 #> 
 #> Attaching package: 'dplyr'
 #> The following objects are masked from 'package:stats':
@@ -137,6 +139,8 @@ library("dplyr")
 #> 
 #>     intersect, setdiff, setequal, union
 library("tidyr")
+#> Warning: package 'tidyr' was built under R version 3.2.5
+library("ggplot2")
 data(homeworkch3, package = "rethinking")
 
 # 100 two-children families. 1: Child is a boy. 0: Girl.
@@ -204,8 +208,14 @@ p_grid[which.max(posterior)]
 **3H2. Using the `sample` function, draw 10,000 random parameter values from the posterior distribution you calculated above. Use these samples to estimate the 50%, 89%, and 97% highest posterior density intervals.**
 
 ``` r
-samples <- sample(p_grid, prob = posterior, size = 1e5, replace = TRUE)
-plot(density(samples))
+samples <- sample(p_grid, prob = posterior, size = 1e4, replace = TRUE)
+
+ggplot() + geom_density(aes(x = samples))
+```
+
+![](03-SamplingTheImaginary_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+``` r
 
 # HPDI returned in a data-frame with a column for probability level
 tidy_hpdi <- function(xs, prob) {
@@ -224,26 +234,29 @@ bind_rows(
   tidy_hpdi(samples, .89),
   tidy_hpdi(samples, .97)
 )
+#> # A tibble: 3 x 4
+#>   Level Variable     lower     upper
+#>   <dbl>    <chr>     <dbl>     <dbl>
+#> 1  0.50     var1 0.5305305 0.5775776
+#> 2  0.89     var1 0.5005005 0.6106106
+#> 3  0.97     var1 0.4794795 0.6276276
 ```
-
-![](03-SamplingTheImaginary_files/figure-markdown_github/unnamed-chunk-9-1.png)
-
-    #> # A tibble: 3 x 4
-    #>   Level Variable     lower     upper
-    #>   <dbl>    <chr>     <dbl>     <dbl>
-    #> 1  0.50     var1 0.5265265 0.5735736
-    #> 2  0.89     var1 0.5005005 0.6126126
-    #> 3  0.97     var1 0.4764765 0.6276276
 
 **3H3. Use `rbinom` to simulate 10,000 replicates of 200 births. You should end up with 10,000 numbers, each one a count of boys out of 200 births. Compare the distribution of predicted numbers of boys to the actual count in the data (111 boys out of 200 births).**
 
 ``` r
 replicates <- rbinom(n = length(samples), size = 200, prob = samples)
-plot(density(replicates))
-abline(v = sum(births))
+obs_reps <- replicates[replicates == sum(births)]
+
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") + 
+  labs(x = "(Simulated) Num Boys in 2-Child Families",
+       y = "Frequency in 10,000 Simulations")
 ```
 
-![](03-SamplingTheImaginary_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](03-SamplingTheImaginary_files/figure-markdown_github/boys%20born-1.png)
 
 **3H4. Now compare 10,000 counts of boys from 100 simulated first borns only to the number of boys in the first births, `birth1`. How does the model look in this light?**
 
@@ -251,11 +264,17 @@ The data don't fall squarely in the middle of the simulations. But they fall in 
 
 ``` r
 replicates <- rbinom(n = length(samples), size = 100, prob = samples)
-plot(density(replicates))
-abline(v = sum(df$Child1))
+obs_reps <- replicates[replicates == sum(birth1)]
+
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") + 
+  labs(x = "(Simulated) Num Boys in 1-Child Families",
+       y = "Frequency in 10,000 Simulations")
 ```
 
-![](03-SamplingTheImaginary_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](03-SamplingTheImaginary_files/figure-markdown_github/first%20born%20boys-1.png)
 
 ``` r
 
@@ -284,11 +303,19 @@ boys_after_girls
 #> [1] 39
 
 replicates <- rbinom(n = length(samples), size = n_girl_birth1, prob = samples)
-plot(density(replicates))
-abline(v = boys_after_girls)
+obs_reps <- replicates[replicates == boys_after_girls]
+
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") +
+  geom_vline(xintercept = boys_after_girls, 
+             color = rethinking::rethink_palette[1]) +
+  labs(x = "(Simulated) Num Boys Born after Girls in 2-Child Fams",
+       y = "Frequency in 10,000 Simulations")
 ```
 
-![](03-SamplingTheImaginary_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](03-SamplingTheImaginary_files/figure-markdown_github/boys%20after%20girls-1.png)
 
 It's possible that they want one of each gender. The number of boys born after girls is also kind of skewed away from the simulations, but nowhere near as extremely. Maybe because some parents are fine with two boys.
 
@@ -308,11 +335,19 @@ boys_after_boys
 #> [1] 21
 
 replicates <- rbinom(n = length(samples), size = n_boy_birth1, prob = samples)
-plot(density(replicates))
-abline(v = boys_after_boys)
+obs_reps <- replicates[replicates == boys_after_boys]
+
+ggplot() + 
+  geom_histogram(aes(x = replicates), binwidth = 1, color = "white") +
+  geom_histogram(aes(x = obs_reps), binwidth = 1, 
+                 fill = rethinking::rethink_palette[1], color = "white") +
+  geom_vline(xintercept = boys_after_boys, 
+             color = rethinking::rethink_palette[1]) +
+  labs(x = "(Simulated) Num Boys Born after Boys in 2-Child Fams",
+       y = "Frequency in 10,000 Simulations")
 ```
 
-![](03-SamplingTheImaginary_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](03-SamplingTheImaginary_files/figure-markdown_github/boys%20after%20boys-1.png)
 
 ``` r
 df %>% count(Child1, Child2)
